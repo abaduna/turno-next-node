@@ -1,6 +1,6 @@
 import cors from 'cors'
 import morgan from 'morgan'
-const express = require('express')
+import express from 'express'
 const app = express()
 const port = 3001
 
@@ -16,6 +16,8 @@ app.use('/api/field', routerField)
 
 import routerTime from './router/timetable.router'
 app.use("/api/time",routerTime)
+import routerCantFields from './router/cantFields.router'
+app.use("/api/cantfields",routerCantFields)
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)

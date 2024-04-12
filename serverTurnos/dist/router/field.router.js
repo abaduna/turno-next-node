@@ -18,7 +18,7 @@ const routerField = express_1.default.Router();
 routerField.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     try {
-        const result = yield conection.query('SELECT * FROM field;');
+        const result = yield conection.query('SELECT * FROM field ;');
         return res.status(200).json(result);
     }
     catch (error) {
@@ -30,7 +30,7 @@ routerField.get('/:idusuario', (req, res) => __awaiter(void 0, void 0, void 0, f
     const conection = yield (0, db_1.getConnection)();
     const idusuario = req.params.idusuario;
     try {
-        const result = yield conection.query('SELECT * FROM field WHERE idUsuario =?;', [idusuario]);
+        const result = yield conection.query('SELECT * FROM field WHERE idusuario =?  ;', [idusuario]);
         return res.status(200).json(result);
     }
     catch (error) {
@@ -41,8 +41,9 @@ routerField.get('/:idusuario', (req, res) => __awaiter(void 0, void 0, void 0, f
 routerField.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     const { name, ubicacion, idusuario } = req.body;
+    const idfield = new Date().getTime();
     try {
-        yield conection.query(`INSERT INTO field (  name, ubicacion, idusuario ) VALUES (?,?,?);`, [name, ubicacion, idusuario]);
+        yield conection.query(`INSERT INTO field (  name, ubicacion, idusuario,idfield ) VALUES (?,?,?,?);`, [name, ubicacion, idusuario, idfield]);
         res.status(200).json({ mesage: 'good post' });
     }
     catch (error) {
@@ -65,7 +66,7 @@ routerField.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerField.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerField.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const conection = yield (0, db_1.getConnection)();
     try {

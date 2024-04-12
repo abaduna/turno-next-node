@@ -15,16 +15,52 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = require("../module/db");
 const routerTime = express_1.default.Router();
-routerTime.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.get('/:dataDia/:idfield/:idUsuario', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    ///api/time/2024-04-11 0:0:0/1234
+    // mostra solo los reservador
+    //hacer otro para que se puede editar
     const conection = yield (0, db_1.getConnection)();
+    const dataDia = req.params.dataDia;
+    const idfield = req.params.idfield;
+    const idUsuario = req.params.idUsuario;
     try {
-        const result = yield conection.query('SELECT * FROM time;');
+        const result = yield conection.query('SELECT * FROM time where idfield = ? AND idUsuario = ? AND dataDia and reservado = 0 ;', [idfield, idUsuario, dataDia]);
         return res.status(200).json(result);
     }
     catch (error) {
         console.log(`error en la consulta`, error);
         yield conection.end();
         res.status(500).json({ error: error });
+    }
+}));
+routerTime.put("/reserver/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const conection = yield (0, db_1.getConnection)();
+    const id = req.params.id;
+    try {
+        yield conection.query(`UPDATE time
+            SET reservado = 1
+            WHERE id = ?`, [id]);
+        res.status(200).json({ mesage: 'good put reservar' });
+    }
+    catch (error) {
+        console.error('Error en la consulta:', error);
+        res.status(500).json({ error: 'Error en la consulta' });
+    }
+}));
+routerTime.put('/put/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(`put`);
+    const conection = yield (0, db_1.getConnection)();
+    const id = req.params.id;
+    const { dateStart, dateEnd, idfield, reservado, dataDia, idUsuario } = req.body;
+    try {
+        yield conection.query(`UPDATE time
+            SET dateStart = ?, dateEnd = ?, idfield = ?,reservado = ?,dataDia = ?,idUsuario = ?
+            WHERE id = ?`, [dateStart, dateEnd, idfield, reservado, dataDia, idUsuario, id]);
+        res.status(200).json({ mesage: 'good put' });
+    }
+    catch (error) {
+        console.error('Error en la consulta:', error);
+        res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
 routerTime.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,7 +75,7 @@ routerTime.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerTime.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const conection = yield (0, db_1.getConnection)();
     try {
