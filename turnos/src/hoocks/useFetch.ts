@@ -18,7 +18,8 @@ export const useFetch = () => {
   };
   const postData = async (endpoint: string,data:unknown)=>{
     try {
-      await API.post(endpoint,data)
+      const result = await API.post(endpoint,data)
+      return result
     } catch (error) {
       console.error(`postData error`, error);
     }

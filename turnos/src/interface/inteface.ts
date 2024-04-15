@@ -24,3 +24,6 @@ export interface paramsProps {
     idcliente: string;
   };
 }
+export interface tokenProps {
+  token:string
+}
