@@ -1,9 +1,10 @@
 import express, { Request, Response, Router } from 'express'
 import { getConnection } from '../module/db'
+import { verifyToken } from '../Middleware/authMiddleware'
 
 const routerField: Router = express.Router()
 
-routerField.get('/', async (req: Request, res: Response) => {
+routerField.get('/',verifyToken ,async (req: Request, res: Response) => {
   const conection = await getConnection()
   try {
     const result = await conection.query('SELECT * FROM field ;')
@@ -13,7 +14,7 @@ routerField.get('/', async (req: Request, res: Response) => {
     res.status(500).json({ error: error })
   }
 })
-routerField.get('/:idusuario', async (req: Request, res: Response) => {
+routerField.get('/:idusuario', verifyToken ,async (req: Request, res: Response) => {
   const conection = await getConnection()
   const idusuario = req.params.idusuario
 
@@ -28,7 +29,7 @@ routerField.get('/:idusuario', async (req: Request, res: Response) => {
     res.status(500).json({ error: error })
   }
 })
-routerField.post('/', async (req: Request, res: Response) => {
+routerField.post('/', verifyToken ,async (req: Request, res: Response) => {
   const conection = await getConnection()
   const { name, ubicacion, idusuario } = req.body
   const idfield = new Date().getTime()
@@ -43,7 +44,7 @@ routerField.post('/', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en la consulta' })
   }
 })
-routerField.put('/:id', async (req: Request, res: Response) => {
+routerField.put('/:id', verifyToken , async (req: Request, res: Response) => {
   const { name, ubicacion, idusuario } = req.body
   const id = req.params.id
   const conection = await getConnection()
@@ -60,7 +61,7 @@ routerField.put('/:id', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en la consulta' })
   }
 })
-routerField.delete('/:id', async (req: Request, res: Response) => {
+routerField.delete('/:id', verifyToken , async (req: Request, res: Response) => {
   const id = req.params.id
   const conection = await getConnection()
   try {

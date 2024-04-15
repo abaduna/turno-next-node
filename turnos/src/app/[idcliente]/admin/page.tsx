@@ -19,6 +19,7 @@ function Page({ params }: paramsProps) {
     const [ubicacion,setUbicacion]=useState<string>("")
     const [name,setName]=useState<string>("")
     const [field,setField]=useState<field[]>([])
+    const [message,setMessage]=useState<boolean>(false)
     const  idcliente = params.idcliente
     const postFields =(e: FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
@@ -56,9 +57,10 @@ function Page({ params }: paramsProps) {
           <button type="submit">Agregar cancha</button>
         </form>
       </div>
+      {message && <span className={styles.message}>Agregado con exito</span>}
       <div className={styles.fieldsContainer}>
         {field && field.length > 0 && field.map((fiel)=>(
-          <FieldAdminComponet idcliente={idcliente} key={fiel.id} {...fiel}/>
+          <FieldAdminComponet idcliente={idcliente} setMessage={setMessage} key={fiel.id} {...fiel}/>
         ))}
       </div>
       <div className={styles.linkContainer}>

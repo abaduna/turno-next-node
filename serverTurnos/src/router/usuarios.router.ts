@@ -1,8 +1,9 @@
 import express, { Request, Response, Router } from 'express'
 import { getConnection } from './../module/db'
+import { verifyToken } from '../Middleware/authMiddleware'
 const routerUsuarios: Router = express.Router()
 
-routerUsuarios.get('/usuario', async (req: Request, res: Response) => {
+routerUsuarios.get('/usuario', verifyToken , async (req: Request, res: Response) => {
   const conection = await getConnection()
   try {
     const result = await conection.query('SELECT * FROM usuarios;')
@@ -14,7 +15,7 @@ routerUsuarios.get('/usuario', async (req: Request, res: Response) => {
   }
 })
 
-routerUsuarios.post('/usuario', async (req: Request, res: Response) => {
+routerUsuarios.post('/usuario', verifyToken , async (req: Request, res: Response) => {
   const conection = await getConnection()
   const { name, email, password } = req.body
   try {
@@ -28,7 +29,7 @@ routerUsuarios.post('/usuario', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en la consulta' })
   }
 })
-routerUsuarios.put('/usuario/:id', async (req: Request, res: Response) => {
+routerUsuarios.put('/usuario/:id', verifyToken , async (req: Request, res: Response) => {
   const { name, email, password } = req.body
   const id = req.params.id
   const conection = await getConnection()

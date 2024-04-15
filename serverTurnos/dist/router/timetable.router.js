@@ -14,8 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = require("../module/db");
+const authMiddleware_1 = require("../Middleware/authMiddleware");
 const routerTime = express_1.default.Router();
-routerTime.get('/:dataDia/:idfield/:idUsuario', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.get('/:dataDia/:idfield/:idUsuario', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     ///api/time/2024-04-11 0:0:0/1234
     // mostra solo los reservador
     //hacer otro para que se puede editar
@@ -24,7 +25,7 @@ routerTime.get('/:dataDia/:idfield/:idUsuario', (req, res) => __awaiter(void 0, 
     const idfield = req.params.idfield;
     const idUsuario = req.params.idUsuario;
     try {
-        const result = yield conection.query('SELECT * FROM time where idfield = ? AND idUsuario = ? AND dataDia and reservado = 0 ;', [idfield, idUsuario, dataDia]);
+        const result = yield conection.query('SELECT * FROM time WHERE idfield = ? AND idUsuario = ? AND dataDia = ? AND reservado = false;', [idfield, idUsuario, dataDia]);
         return res.status(200).json(result);
     }
     catch (error) {
@@ -33,7 +34,7 @@ routerTime.get('/:dataDia/:idfield/:idUsuario', (req, res) => __awaiter(void 0, 
         res.status(500).json({ error: error });
     }
 }));
-routerTime.put("/reserver/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.put("/reserver/:id", authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     const id = req.params.id;
     try {
@@ -47,7 +48,7 @@ routerTime.put("/reserver/:id", (req, res) => __awaiter(void 0, void 0, void 0, 
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerTime.put('/put/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.put('/put/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`put`);
     const conection = yield (0, db_1.getConnection)();
     const id = req.params.id;
@@ -63,7 +64,7 @@ routerTime.put('/put/:id', (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerTime.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.post('/', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     const { dateStart, dateEnd, idfield, reservado, dataDia, idUsuario } = req.body;
     try {
@@ -75,7 +76,7 @@ routerTime.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerTime.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.delete('/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const conection = yield (0, db_1.getConnection)();
     try {

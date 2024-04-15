@@ -44,4 +44,9 @@
   .linkContainer {
     margin-top: 20px;
   }
-  
+  .message{
+    background-color: green;
+    padding: 15px;
+    color: white;
+    border-radius: 15px;
+  }

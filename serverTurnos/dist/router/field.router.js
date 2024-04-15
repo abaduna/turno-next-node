@@ -14,8 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = require("../module/db");
+const authMiddleware_1 = require("../Middleware/authMiddleware");
 const routerField = express_1.default.Router();
-routerField.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerField.get('/', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     try {
         const result = yield conection.query('SELECT * FROM field ;');
@@ -26,7 +27,7 @@ routerField.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: error });
     }
 }));
-routerField.get('/:idusuario', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerField.get('/:idusuario', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     const idusuario = req.params.idusuario;
     try {
@@ -38,7 +39,7 @@ routerField.get('/:idusuario', (req, res) => __awaiter(void 0, void 0, void 0, f
         res.status(500).json({ error: error });
     }
 }));
-routerField.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerField.post('/', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     const { name, ubicacion, idusuario } = req.body;
     const idfield = new Date().getTime();
@@ -51,7 +52,7 @@ routerField.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerField.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerField.put('/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, ubicacion, idusuario } = req.body;
     const id = req.params.id;
     const conection = yield (0, db_1.getConnection)();
@@ -66,7 +67,7 @@ routerField.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerField.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerField.delete('/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const conection = yield (0, db_1.getConnection)();
     try {

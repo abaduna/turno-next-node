@@ -14,8 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = require("./../module/db");
+const authMiddleware_1 = require("../Middleware/authMiddleware");
 const routerUsuarios = express_1.default.Router();
-routerUsuarios.get('/usuario', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerUsuarios.get('/usuario', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     try {
         const result = yield conection.query('SELECT * FROM usuarios;');
@@ -27,7 +28,7 @@ routerUsuarios.get('/usuario', (req, res) => __awaiter(void 0, void 0, void 0, f
         res.status(500).json({ error: error });
     }
 }));
-routerUsuarios.post('/usuario', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerUsuarios.post('/usuario', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const conection = yield (0, db_1.getConnection)();
     const { name, email, password } = req.body;
     try {
@@ -39,7 +40,7 @@ routerUsuarios.post('/usuario', (req, res) => __awaiter(void 0, void 0, void 0, 
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerUsuarios.put('/usuario/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerUsuarios.put('/usuario/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
     const id = req.params.id;
     const conection = yield (0, db_1.getConnection)();

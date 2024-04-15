@@ -8,10 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getConnection = void 0;
-const mysql = require("promise-mysql");
-const comection = mysql.createConnection({
+const promise_mysql_1 = __importDefault(require("promise-mysql"));
+const comection = promise_mysql_1.default.createConnection({
     host: "localhost",
     database: "turnito",
     user: "root",

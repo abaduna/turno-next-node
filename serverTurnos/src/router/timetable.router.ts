@@ -1,9 +1,10 @@
 import express, { Request, Response, Router } from 'express'
 import { getConnection } from '../module/db'
+import { verifyToken } from '../Middleware/authMiddleware'
 
 const routerTime: Router = express.Router()
 
-routerTime.get('/:dataDia/:idfield/:idUsuario', async (req: Request, res: Response) => {
+routerTime.get('/:dataDia/:idfield/:idUsuario', verifyToken , async (req: Request, res: Response) => {
   ///api/time/2024-04-11 0:0:0/1234
   // mostra solo los reservador
   //hacer otro para que se puede editar
@@ -13,8 +14,8 @@ routerTime.get('/:dataDia/:idfield/:idUsuario', async (req: Request, res: Respon
   const idUsuario = req.params.idUsuario
   try {
     const result = await conection.query(
-      'SELECT * FROM time where idfield = ? AND idUsuario = ? AND dataDia AND reservado = false ;',
-      [idfield, idUsuario,dataDia]
+      'SELECT * FROM time WHERE idfield = ? AND idUsuario = ? AND dataDia = ? AND reservado = false;',
+      [idfield, idUsuario, dataDia]
     )
     return res.status(200).json(result)
   } catch (error) {
@@ -23,7 +24,7 @@ routerTime.get('/:dataDia/:idfield/:idUsuario', async (req: Request, res: Respon
     res.status(500).json({ error: error })
   }
 })
-routerTime.put("/reserver/:id",async (req: Request, res: Response) => {
+routerTime.put("/reserver/:id", verifyToken ,async (req: Request, res: Response) => {
 
   
   const conection = await getConnection()
@@ -42,7 +43,7 @@ routerTime.put("/reserver/:id",async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en la consulta' })
   }
 })
-routerTime.put('/put/:id', async (req: Request, res: Response) => {
+routerTime.put('/put/:id', verifyToken , async (req: Request, res: Response) => {
   console.log(`put`);
   
   const conection = await getConnection()
@@ -62,7 +63,7 @@ routerTime.put('/put/:id', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en la consulta' })
   }
 })
-routerTime.post('/', async (req: Request, res: Response) => {
+routerTime.post('/', verifyToken , async (req: Request, res: Response) => {
   const conection = await getConnection()
   const { dateStart, dateEnd, idfield, reservado, dataDia, idUsuario } =
     req.body
@@ -77,7 +78,7 @@ routerTime.post('/', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en la consulta' })
   }
 })
-routerTime.delete('/:id', async (req: Request, res: Response) => {
+routerTime.delete('/:id', verifyToken , async (req: Request, res: Response) => {
   const id = req.params.id
   const conection = await getConnection()
   try {

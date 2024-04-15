@@ -15,9 +15,12 @@ import routerField from './router/field.router'
 app.use('/api/field', routerField)
 
 import routerTime from './router/timetable.router'
-app.use("/api/time",routerTime)
-import routerCantFields from './router/cantFields.router'
-app.use("/api/cantfields",routerCantFields)
+app.use('/api/time', routerTime)
+
+
+
+import routerLogin from './router/login.router'
+app.use('/api/login', routerLogin)
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)

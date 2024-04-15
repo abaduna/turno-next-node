@@ -16,9 +16,9 @@ app.use('/api', usuarios_router_1.default);
 const field_router_1 = __importDefault(require("./router/field.router"));
 app.use('/api/field', field_router_1.default);
 const timetable_router_1 = __importDefault(require("./router/timetable.router"));
-app.use("/api/time", timetable_router_1.default);
-const cantFields_router_1 = __importDefault(require("./router/cantFields.router"));
-app.use("/api/cantfields", cantFields_router_1.default);
+app.use('/api/time', timetable_router_1.default);
+const login_router_1 = __importDefault(require("./router/login.router"));
+app.use('/api/login', login_router_1.default);
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
 });

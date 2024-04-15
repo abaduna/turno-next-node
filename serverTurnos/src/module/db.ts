@@ -1,4 +1,4 @@
-const mysql = require("promise-mysql");
+import mysql from "promise-mysql";
 
 const comection = mysql.createConnection({
     host:"localhost",

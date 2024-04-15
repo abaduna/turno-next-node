@@ -6,6 +6,8 @@ export interface field {
   ubicacion: string;
   dataState: string;
   idcliente?:string
+  setMesaggeSusefull?:(parm:boolean) =>void
+  setMessage?:(parm:boolean) =>void
 }
 
 export interface time {
