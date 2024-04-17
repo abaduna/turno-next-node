@@ -14,7 +14,7 @@ routerField.get('/',verifyToken ,async (req: Request, res: Response) => {
     res.status(500).json({ error: error })
   }
 })
-routerField.get('/:idusuario', verifyToken ,async (req: Request, res: Response) => {
+routerField.get('/:idusuario',verifyToken ,async (req: Request, res: Response) => {
   const conection = await getConnection()
   const idusuario = req.params.idusuario
 
@@ -44,7 +44,7 @@ routerField.post('/', verifyToken ,async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en la consulta' })
   }
 })
-routerField.put('/:id', verifyToken , async (req: Request, res: Response) => {
+routerField.put('/:id' , async (req: Request, res: Response) => {
   const { name, ubicacion, idusuario } = req.body
   const id = req.params.id
   const conection = await getConnection()

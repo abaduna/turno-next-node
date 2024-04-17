@@ -17,6 +17,7 @@ const db_1 = require("../module/db");
 const authMiddleware_1 = require("../Middleware/authMiddleware");
 const routerTime = express_1.default.Router();
 routerTime.get('/:dataDia/:idfield/:idUsuario', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.header);
     ///api/time/2024-04-11 0:0:0/1234
     // mostra solo los reservador
     //hacer otro para que se puede editar
@@ -34,14 +35,15 @@ routerTime.get('/:dataDia/:idfield/:idUsuario', authMiddleware_1.verifyToken, (r
         res.status(500).json({ error: error });
     }
 }));
-routerTime.put("/reserver/:id", authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const conection = yield (0, db_1.getConnection)();
+routerTime.put("/reserver/:id/:user", authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
+    const user = req.params.user;
+    const conection = yield (0, db_1.getConnection)();
     try {
         yield conection.query(`UPDATE time
-            SET reservado = 1
-            WHERE id = ?`, [id]);
-        res.status(200).json({ mesage: 'good put reservar' });
+            SET reservado = 1 , users = ?
+            WHERE id = ?`, [user, id]);
+        res.status(200).json({ message: '/reserver/:id/:user' });
     }
     catch (error) {
         console.error('Error en la consulta:', error);

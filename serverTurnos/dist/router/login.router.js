@@ -21,20 +21,26 @@ const routerLogin = express_1.default.Router();
 routerLogin.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const connection = yield (0, db_1.getConnection)();
     const { name, password } = req.body;
+    console.log(req.body);
     try {
-        const saltRounds = 10;
-        const salt = yield bcrypt_1.default.genSalt(saltRounds);
-        const passwordToString = password.toString();
-        const hashedPassword = yield bcrypt_1.default.hash(passwordToString, salt);
-        console.log(`hashedPassword ${hashedPassword}`);
-        const user = yield connection.query('SELECT * FROM usuarios WHERE name = ? AND hashPassword = ? ;', [name, hashedPassword]);
-        jsonwebtoken_1.default.sign({ user: user }, 'secretKey', (err, token) => {
-            res.json({ token: token });
-        });
+        const user = yield connection.query('SELECT * FROM usuarios WHERE name = ?;', [name]);
+        if (user.length === 0) {
+            return res.status(401).json({ message: "Usuario no encontrado" });
+        }
+        if (typeof password !== 'string') {
+            return res.status(400).json({ message: "La contraseña debe ser un string" });
+        }
+        const storedHashedPassword = user[0].hashPassword;
+        const isPasswordValid = yield bcrypt_1.default.compare(password, storedHashedPassword);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Contraseña incorrecta" });
+        }
+        const token = jsonwebtoken_1.default.sign({ userId: user[0].id, user: user[0].name }, 'abaduna');
+        res.json({ token });
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: error });
+        res.status(500).json({ message: "Error interno del servidor buena ruta" });
     }
 }));
 routerLogin.post('/created', authMiddleware_1.verifyToken, (req, res) => {

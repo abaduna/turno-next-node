@@ -6,13 +6,14 @@ import FieldComponet from "@/componets/FieldComponet";
 import styles from "./pageHome.module.css";
 import { revalidatePath } from "next/cache";
 import actionPath from "@/action/action";
-
+import { useRouter } from "next/navigation";
 function Page({ params }: paramsProps) {
   const [field, setField] = useState<field[]>();
   const [endpoint, setEndpoint] = useState<string>("");
   const [dataState, setDateState] = useState<string>("");
   const [mesaggeSusefull,setMesaggeSusefull] =useState<boolean>(false)
   const { getData } = useFetch();
+  const router = useRouter();
   useEffect(() => {
     const getFields = async () => {
       try {
@@ -34,6 +35,12 @@ function Page({ params }: paramsProps) {
     getFields();
     actionPath();
   }, [endpoint, dataState]);
+  useEffect(()=>{
+    const toekn = localStorage.getItem('token') 
+    if (!toekn) {
+      router.push("/login");  
+    }
+  },[])
   return (
     <div>
       <h4 className={styles.title}>Eleji tu cancha</h4>

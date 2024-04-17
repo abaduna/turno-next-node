@@ -1,9 +1,10 @@
 "use client"
 
 export default function Home() {
+  const token = localStorage.getItem("token")
   return (
     <>
-    <h1>home</h1>
+    {token}
     </>
   );
 }

@@ -5,6 +5,9 @@ import React, { useEffect, useState } from "react";
 import { type time } from "../interface/inteface";
 import styles from "./Field.module.css";
 import actionPath from "@/action/action";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import axios from "axios";
+import jwt  from 'jsonwebtoken'
 function FieldComponet({
   dataState,
   id,
@@ -17,8 +20,12 @@ function FieldComponet({
   const [endpoint, setEndpoint] = useState<string>("");
   const [time, setTime] = useState<time[]>([]);
   const [appointmentEndpoint, setAppointmentEndpoint] = useState<string>("");
-
-  const { getData, putData } = useFetch();
+  const [idstate, setIdState] = useState<string>("");
+  const [preferenceId, setPreferenceId] = useState(null);
+  initMercadoPago("TEST-5f4dbad7-ce3c-43c6-98c3-86fb2fb5deae", {
+    locale: "es-AR",
+  });
+  const { getData } = useFetch();
   const getDataTime = async () => {
     const data = await getData(endpoint);
     if (typeof data !== "undefined") {
@@ -33,29 +40,54 @@ function FieldComponet({
     ///http://localhost:3001/api/time/2024-04-11/1234/1234
     ///api/time/2024-04-11/1234
     setEndpoint(`/api/time/${dataState}/${idfield}/${idusuario}`);
-    console.error(endpoint);
+    
 
     actionPath();
     getDataTime();
   }, [dataState]);
-  const handerAppointment = (id: number) => {
+
+ 
+  const handleClick =async (id:number) => {
+    console.log("click");
+    let user = ""
+    let token:string = localStorage.getItem('token') ?? ""
+    const decodedToken = jwt.decode(token, { complete: true });
+    if (decodedToken) {
+      // Mostrar la carga útil decodificada
+      console.log('Carga útil decodificada:', decodedToken.payload);
+  
+      // Verificar si la carga útil contiene información sobre el usuario
+      if (decodedToken.payload && decodedToken.payload.user) {
+          user = decodedToken.payload.user
+      } else {
+          console.log('No se encontró información sobre el usuario en el token.');
+      }
+  } else {
+      console.log('No se pudo decodificar el token.');
+  }
+  const datamepa = {
+    user,
+    id
+  }
     try {
-      setAppointmentEndpoint(`/api/time/reserver/${id}`);
+      const response = await axios.post(
+        "http://localhost:3001/api/mepa/create-order",
+        datamepa,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data); 
+
+      window.location.href = response.data;
+      actionPath();
       getDataTime();
-      setMesaggeSusefull(true);
-      setTimeout(() => {
-        setMesaggeSusefull(false);
-      }, 900);
     } catch (error) {
-      console.log(error);
+      console.error("Error al realizar la solicitud:", error.message);
     }
   };
-  useEffect(() => {
-    const appointment = () => {
-      putData(appointmentEndpoint);
-    };
-    appointment();
-  }, [appointmentEndpoint]);
   return (
     <div className={styles.container}>
       <p>lugares para reservar {name}</p>
@@ -70,9 +102,15 @@ function FieldComponet({
                 {new Date(lugare.dateStart).getHours().toLocaleString()}
               </p>
 
-              <button onClick={() => handerAppointment(lugare.id)}>
+              <button onClick={() => handleClick(lugare.id)}>
                 reservar
               </button>
+              {idstate && (
+                <Wallet
+                  initialization={{ preferenceId: idstate }}
+                  customization={{ texts: { valueProp: "smart_option" } }}
+                />
+              )}
             </div>
           </div>
         ))}

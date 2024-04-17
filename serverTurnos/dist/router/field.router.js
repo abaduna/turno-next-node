@@ -52,7 +52,7 @@ routerField.post('/', authMiddleware_1.verifyToken, (req, res) => __awaiter(void
         res.status(500).json({ error: 'Error en la consulta' });
     }
 }));
-routerField.put('/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerField.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, ubicacion, idusuario } = req.body;
     const id = req.params.id;
     const conection = yield (0, db_1.getConnection)();

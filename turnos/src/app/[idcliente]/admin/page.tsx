@@ -38,7 +38,7 @@ function Page({ params }: paramsProps) {
             const fieldResponse = await getData(`api/field/${params.idcliente}`);
             
             if (typeof fieldResponse !== "undefined") {
-                fieldResponse?  setField(fieldResponse.data): ""
+                setField(fieldResponse.data)
                 console.error(fieldResponse.data);
                 
               } else {

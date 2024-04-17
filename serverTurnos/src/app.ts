@@ -22,6 +22,9 @@ app.use('/api/time', routerTime)
 import routerLogin from './router/login.router'
 app.use('/api/login', routerLogin)
 
+import routerMePA from './router/mepa.router'
+app.use("/api/mepa",routerMePA)
+
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)
 })

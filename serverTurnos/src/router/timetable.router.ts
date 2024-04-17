@@ -5,6 +5,8 @@ import { verifyToken } from '../Middleware/authMiddleware'
 const routerTime: Router = express.Router()
 
 routerTime.get('/:dataDia/:idfield/:idUsuario', verifyToken , async (req: Request, res: Response) => {
+  console.log(req.header);
+  
   ///api/time/2024-04-11 0:0:0/1234
   // mostra solo los reservador
   //hacer otro para que se puede editar
@@ -24,20 +26,17 @@ routerTime.get('/:dataDia/:idfield/:idUsuario', verifyToken , async (req: Reques
     res.status(500).json({ error: error })
   }
 })
-routerTime.put("/reserver/:id", verifyToken ,async (req: Request, res: Response) => {
-
-  
-  const conection = await getConnection()
+routerTime.put("/reserver/:id/:user", verifyToken ,async (req: Request, res: Response) => {
   const id = req.params.id
- 
+  const user = req.params.user
+  const conection = await getConnection()
   try {
     await conection.query(
       `UPDATE time
-            SET reservado = 1
+            SET reservado = 1 , users = ?
             WHERE id = ?`,
-      [ id]
-    )
-    res.status(200).json({ mesage: 'good put reservar' })
+      [user, id])
+      res.status(200).json({ message: '/reserver/:id/:user' })
   } catch (error) {
     console.error('Error en la consulta:', error)
     res.status(500).json({ error: 'Error en la consulta' })

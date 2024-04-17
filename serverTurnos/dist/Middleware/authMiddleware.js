@@ -11,7 +11,7 @@ function verifyToken(req, res, next) {
         return res.status(401).json({ message: 'Token no proporcionado' });
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, 'secretKey');
+        const decoded = jsonwebtoken_1.default.verify(token, 'abaduna');
         req.user = decoded.user;
         next();
     }
