@@ -27,3 +27,16 @@ export interface paramsProps {
 export interface tokenProps {
   token:string
 }
+export interface tokenProps {
+  data:dataToken
+  response:responseProps
+}
+interface dataToken {
+  token:string
+}
+interface responseProps {
+  data:dataprops
+}
+interface dataprops {
+  message:string
+}

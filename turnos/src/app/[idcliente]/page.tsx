@@ -11,10 +11,24 @@ function Page({ params }: paramsProps) {
   const [field, setField] = useState<field[]>();
   const [endpoint, setEndpoint] = useState<string>("");
   const [dataState, setDateState] = useState<string>("");
-  const [mesaggeSusefull,setMesaggeSusefull] =useState<boolean>(false)
+  const [dataUpdate, setUpdate] = useState<string>("");
+  const [mesaggeSusefull, setMesaggeSusefull] = useState<boolean>(false);
   const { getData } = useFetch();
   const router = useRouter();
+  let today = new Date();
+  let fecha_actual =
+    today.getFullYear() +
+    "-" +
+    (today.getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    today.getDate().toString().padStart(2, "0");
+  let dataStateUpdate = dataState.split("-");
+  let day = parseInt(dataStateUpdate[2]) - 1;
+  dataStateUpdate[2] = day.toString();
+  let newDate = dataStateUpdate.join("-");
+  
   useEffect(() => {
+    setUpdate(newDate);
     const getFields = async () => {
       try {
         setEndpoint(`api/field/${params.idcliente}`);
@@ -24,7 +38,6 @@ function Page({ params }: paramsProps) {
         if (typeof fieldResponse !== "undefined") {
           setField([]);
           setField(fieldResponse.data);
-         
         } else {
           console.log(`undefind`);
         }
@@ -35,12 +48,12 @@ function Page({ params }: paramsProps) {
     getFields();
     actionPath();
   }, [endpoint, dataState]);
-  useEffect(()=>{
-    const toekn = localStorage.getItem('token') 
+  useEffect(() => {
+    const toekn = localStorage.getItem("token");
     if (!toekn) {
-      router.push("/login");  
+      router.push("/login");
     }
-  },[])
+  }, []);
   return (
     <div>
       <h4 className={styles.title}>Eleji tu cancha</h4>
@@ -51,17 +64,24 @@ function Page({ params }: paramsProps) {
         type="date"
         id="start"
         name="trip-start"
-        min="2024-01-01"
+        min={fecha_actual}
         max="2024-1-30"
         onChange={(e) => setDateState(e.target.value)}
       />
-      <p>reservar el dia {dataState}</p>
-      {mesaggeSusefull && <span className={styles.suffesul}>Has reservado con exito</span>}
-      
+      <p>reservar el dia {dataUpdate}</p>
+      {mesaggeSusefull && (
+        <span className={styles.suffesul}>Has reservado con exito</span>
+      )}
+
       {field &&
         field?.length > 0 &&
         field?.map((fiel, idex) => (
-          <FieldComponet key={idex} {...fiel} setMesaggeSusefull={setMesaggeSusefull} dataState={dataState} />
+          <FieldComponet
+            key={idex}
+            {...fiel}
+            setMesaggeSusefull={setMesaggeSusefull}
+            dataState={newDate}
+          />
         ))}
     </div>
   );

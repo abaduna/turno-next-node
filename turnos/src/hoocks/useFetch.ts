@@ -19,11 +19,13 @@ export const useFetch = () => {
   const postData = async (endpoint: string,data:unknown)=>{
     try {
       const result = await API.post(endpoint,data)
-      console.log(result);
+      
       
       return result
     } catch (error) {
-      console.error(`postData error`, error);
+       console.error(`postData error`, error);
+        return error
+      
     }
   }
   return { getData, putData,postData };

@@ -31,7 +31,9 @@ routerMePA.post('/create-order', async (req: Request, res: Response) => {
 
       auto_return: 'approved'
     }
-const respons = await mercadopago.preferences.create(preference)    
+const respons = await mercadopago.preferences.create(preference)  
+   
+    
     console.log(respons.status) //201
     console.log("t",respons.status===201);
     write(id, user )
