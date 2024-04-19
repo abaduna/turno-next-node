@@ -8,4 +8,5 @@ export const loginSchema = Yup.object({
   repPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Las contraseñas deben coincidir")
     .required("Es necesario confirmar la contraseña"),
+  email:Yup.string().required("campo requerido")
 });

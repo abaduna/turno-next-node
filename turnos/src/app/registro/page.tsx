@@ -1,20 +1,38 @@
-"use client"
+"use client";
 import styles from "./register.module.css";
 import { useFormik } from "formik";
 import { loginSchema } from "./schemas";
-
+import { useFetch } from "@/hoocks/useFetch";
+import { useState } from "react";
 
 function Page({}) {
-  const handlerLogin = (values: {
+  const [succes, setSucces] = useState<boolean>(false);
+  const { postData } = useFetch();
+  const handlerLogin = async (values: {
     name: string;
     password: string;
     repPassword: string;
+    email: string;
   }) => {
-    console.log(values);
+    const data = {
+      password: values.password,
+      name: values.name,
+      email: values.email,
+    };
+    const response = await postData("api/login/register", data);
+    console.log(response);
+    if (response.data.message === "agregado con exito") {
+      console.log(`èxitoso`);
+      setSucces(true);
+      setTimeout(() => {
+        setSucces(false);
+      }, 1000);
+    }
   };
   const formik = useFormik({
     initialValues: {
       name: "",
+      email: "",
       repPassword: "",
       password: "",
     },
@@ -27,7 +45,7 @@ function Page({}) {
   });
   return (
     <div className={styles.container}>
-       
+      {succes &&<span>Agregado con exito</span>}
       <form className={styles.form} onSubmit={formik.handleSubmit}>
         <input
           className={styles.frominput}
@@ -42,7 +60,20 @@ function Page({}) {
         {formik.touched.name && formik.errors.name && (
           <span className={styles.spanFrom}>{formik.errors.name}</span>
         )}
-
+        <br />
+        <input
+          className={styles.frominput}
+          placeholder="email"
+          id="email"
+          name="email"
+          type="email"
+          onChange={formik.handleChange}
+          value={formik.values.email}
+        />
+        <br />
+        {formik.touched.email && formik.errors.email && (
+          <span className={styles.spanFrom}>{formik.errors.email}</span>
+        )}
         <br />
         <input
           className={styles.frominput}
@@ -68,7 +99,10 @@ function Page({}) {
           value={formik.values.repPassword}
         />
         <br />
-
+        {formik.touched.repPassword && formik.errors.repPassword && (
+          <span className={styles.spanFrom}>{formik.errors.repPassword}</span>
+        )}
+        <br />
         <div>
           <button className={styles.formbutton} type="submit">
             Ingresar
