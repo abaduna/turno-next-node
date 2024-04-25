@@ -1,6 +1,6 @@
 tareas para hacer
 idfield hacer por milisegundos check
-cancelar reserva
+cancelar reserva check
+reserva el admin 
 buscar field por ciudad
 buscar info de usuario
-registrar usuarios

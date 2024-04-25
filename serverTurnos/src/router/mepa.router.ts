@@ -5,7 +5,7 @@ import { getConnection } from '../module/db'
 const routerMePA: Router = express.Router()
 mercadopago.configure({
   access_token:
-    'TEST-5966353069909290-041616-8d5b1072aa23bcee655e278b6906943f-207725092'
+    process.env.ACCESS_TOKEN
 })
 interface idUser {
   idTime:string
