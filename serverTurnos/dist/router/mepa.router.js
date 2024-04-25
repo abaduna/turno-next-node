@@ -21,7 +21,6 @@ mercadopago_1.default.configure({
 });
 routerMePA.post('/create-order', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, user } = req.body;
-    console.log(req.body);
     try {
         const preference = {
             items: [
@@ -38,12 +37,14 @@ routerMePA.post('/create-order', (req, res) => __awaiter(void 0, void 0, void 0,
                 failure: 'https://turnitos.com/failure',
                 pending: 'https://turnitos.com/pending'
             },
+            notification_url: `https://1936-190-195-87-149.ngrok-free.app/api/mepa/notificar/${id}`,
             auto_return: 'approved'
         };
         const respons = yield mercadopago_1.default.preferences.create(preference);
-        console.log(respons.status); //201
-        console.log("t", respons.status === 201);
-        write(id, user);
+        const conection = yield (0, db_1.getConnection)();
+        yield conection.query(`UPDATE time
+         SET users = ?
+         WHERE id = ?`, [user, id]);
         res.status(200).json(respons.response.init_point);
     }
     catch (error) {
@@ -59,6 +60,72 @@ const write = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
             WHERE id = ?`, [user, id]);
     console.log(`data`, data);
 });
+routerMePA.post("/notificar/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const idItem = req.params.id;
+        console.log(req.body);
+        const { type, data } = req.body;
+        console.log(data);
+        switch (type) {
+            case "payment": {
+                const paymentId = data.id;
+                const payment = yield mercadopago_1.default.payment.findById(paymentId);
+                console.log("Payment:", payment.body.status_detail);
+                console.log(payment.body.items);
+                if (payment.body.status_detail === "accredited") {
+                    console.log(`writing`);
+                    const conection = yield (0, db_1.getConnection)();
+                    try {
+                        yield conection.query(`UPDATE time
+                    SET reservado = 1
+                    WHERE id = ?`, [idItem]);
+                    }
+                    catch (error) {
+                        console.log(`error`);
+                        console.log(error);
+                    }
+                }
+                break;
+            }
+            case "plan": {
+                const planId = data.id;
+                const plan = yield mercadopago_1.default.plan.findById(planId);
+                console.log("Plan:", plan);
+                // Realizar acciones con el objeto `plan`
+                break;
+            }
+            case "subscription": {
+                const subscriptionId = data.id;
+                const subscription = yield mercadopago_1.default.subscription.findById(subscriptionId);
+                console.log("Subscription:", subscription);
+                // Realizar acciones con el objeto `subscription`
+                break;
+            }
+            case "invoice": {
+                const invoiceId = data.id;
+                const invoice = yield mercadopago_1.default.invoice.findById(invoiceId);
+                console.log("Invoice:", invoice);
+                // Realizar acciones con el objeto `invoice`
+                break;
+            }
+            case "point_integration_wh": {
+                // La notificación puede contener otros datos que debes manejar aquí
+                console.log("Point Integration:", req.body);
+                break;
+            }
+            default: {
+                console.warn("Unknown type:", type);
+                break;
+            }
+        }
+        // Responder para confirmar que se recibió la notificación
+        res.status(200).send("Notification received");
+    }
+    catch (error) {
+        console.error("Error handling notification:", error);
+        res.status(500).send("Error handling notification");
+    }
+}));
 routerMePA.get('/succes', (req, res) => {
     res.send('creattin order');
 });

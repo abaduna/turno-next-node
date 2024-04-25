@@ -35,7 +35,7 @@ routerTime.get('/:dataDia/:idfield/:idUsuario', authMiddleware_1.verifyToken, (r
         res.status(500).json({ error: error });
     }
 }));
-routerTime.put("/reserver/:id/:user", authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routerTime.put('/reserver/:id/:user', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const user = req.params.user;
     const conection = yield (0, db_1.getConnection)();
@@ -83,6 +83,32 @@ routerTime.delete('/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(
     const conection = yield (0, db_1.getConnection)();
     try {
         yield conection.query('DELETE FROM time WHERE id = ?', [id]);
+        res.status(200).json({ message: 'salio bien' });
+    }
+    catch (error) {
+        console.error('Error en la consulta:', error);
+        res.status(500).json({ error: 'Error en la consulta' });
+    }
+}));
+routerTime.get('/cancel/:user', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.params.user;
+    const conection = yield (0, db_1.getConnection)();
+    try {
+        const data = yield conection.query('SELECT * FROM time WHERE users = ? AND reservado = 1', [user]);
+        res.status(200).json({ data });
+    }
+    catch (error) {
+        console.error('Error en la consulta:', error);
+        res.status(500).json({ error: 'Error en la consulta' });
+    }
+}));
+routerTime.patch('/cancel/:id', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const conection = yield (0, db_1.getConnection)();
+    try {
+        yield conection.query(`UPDATE time
+        SET reservado = 0
+        WHERE id = ?`, [id]);
         res.status(200).json({ message: 'salio bien' });
     }
     catch (error) {
