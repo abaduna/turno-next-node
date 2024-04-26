@@ -65,7 +65,7 @@ function Page({ params }: paramsProps) {
         id="start"
         name="trip-start"
         min={fecha_actual}
-        max="2024-1-30"
+        max="2025-1-30"
         onChange={(e) => setDateState(e.target.value)}
       />
       <p>reservar el dia {dataUpdate}</p>

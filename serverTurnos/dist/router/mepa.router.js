@@ -15,9 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mercadopago_1 = __importDefault(require("mercadopago"));
 const db_1 = require("../module/db");
+require("dotenv/config");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 const routerMePA = express_1.default.Router();
+console.log(process.env);
 mercadopago_1.default.configure({
-    access_token: 'TEST-5966353069909290-041616-8d5b1072aa23bcee655e278b6906943f-207725092'
+    access_token: process.env.ACCESS_TOKEN
 });
 routerMePA.post('/create-order', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, user } = req.body;

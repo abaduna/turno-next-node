@@ -36,5 +36,15 @@ export const useFetch = () => {
       return error;
     }
   };
-  return { getData, putData, postData,pathDate };
+  const deletedDate =async(endpoint:string)=>{
+    try {
+      const result = await API.delete(endpoint);
+
+      return result.data;
+    } catch (error) {
+      console.error(`pathDate error`, error);
+      return error;
+    }
+  }
+  return { getData, putData, postData,pathDate,deletedDate };
 };

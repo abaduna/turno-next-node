@@ -21,6 +21,8 @@ const login_router_1 = __importDefault(require("./router/login.router"));
 app.use('/api/login', login_router_1.default);
 const mepa_router_1 = __importDefault(require("./router/mepa.router"));
 app.use("/api/mepa", mepa_router_1.default);
+const reserve_rouer_1 = __importDefault(require("./router/reserve.rouer"));
+app.use("/api/reserve", reserve_rouer_1.default);
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
 });

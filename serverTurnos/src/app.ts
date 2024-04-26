@@ -17,13 +17,14 @@ app.use('/api/field', routerField)
 import routerTime from './router/timetable.router'
 app.use('/api/time', routerTime)
 
-
-
 import routerLogin from './router/login.router'
 app.use('/api/login', routerLogin)
 
 import routerMePA from './router/mepa.router'
 app.use("/api/mepa",routerMePA)
+
+import routerReserve from './router/reserve.rouer'
+app.use("/api/reserve",routerReserve)
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)

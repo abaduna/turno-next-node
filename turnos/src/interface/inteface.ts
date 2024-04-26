@@ -18,6 +18,7 @@ export interface time {
   idUsuario: number;
   idfield: number;
   reservado: number;
+  users?:string
 }
 export interface paramsProps {
   params: {

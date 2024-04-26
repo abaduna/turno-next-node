@@ -1,16 +1,16 @@
 import express, { Request, Response, Router } from 'express'
 import mercadopago from 'mercadopago'
 import { getConnection } from '../module/db'
-
+import 'dotenv/config'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config()
 const routerMePA: Router = express.Router()
+console.log(process.env);
 mercadopago.configure({
-  access_token:
-    process.env.ACCESS_TOKEN
+  access_token:process.env.ACCESS_TOKEN
 })
-interface idUser {
-  idTime:string
-  user:string
-}
+
+
 routerMePA.post('/create-order', async (req: Request, res: Response) => {
   const { id, user } = req.body
  
